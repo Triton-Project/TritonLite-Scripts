@@ -190,7 +190,7 @@ void loop() {
     digitalWrite(valve2, HIGH);
     V2 = 1;
     isControling = 1;
-    delay(1000);
+    delay(100);
   } else {
     digitalWrite(valve2, LOW);
     V2 = 0;
