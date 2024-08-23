@@ -67,9 +67,9 @@ const int GREEN = 8;
 const int RED = 9;
 
 // 電磁弁
-const int8_t valve0 = 6; // 注入バルブ
-const int8_t valve1 = 5; // 排気バルブ
-const int8_t valve2 = 7; // 加圧バルブ 
+const int8_t valve0 = 6;  // 注入バルブ
+const int8_t valve1 = 5;  // 排気バルブ
+const int8_t valve2 = 7;  // 加圧バルブ
 
 // 電磁弁開閉時間指定
 #define SUP_START_TIME (30 * 1000)
@@ -184,8 +184,10 @@ void loop() {
   while (mygps.available()) {
     gps.encode(mygps.read());
   }
-// センサーデータの取得と処理
-if (((in_prs_pressure * 68.94) + 1013.25) < out_pre_pressure) { //PSIをmbarに， 内部気圧センサはゲージ圧センサなので、大気圧を加算
+
+  // センサーデータの取得と処理
+  acquireSensorData();
+  if (((in_prs_pressure * 68.94) + 1013.25) < out_pre_pressure) {  //PSIをmbarに， 内部気圧センサはゲージ圧センサなので、大気圧を加算
     digitalWrite(valve2, HIGH);
     V2 = 1;
     isControling = 1;
@@ -373,47 +375,47 @@ void writeSDcard() {
 void CtrlValve() {
   switch (Ctrl_state) {
     case 0:
-      if((miliTime - last_ctrl) > SUP_START_TIME) {
+      if ((miliTime - last_ctrl) > SUP_START_TIME) {
         digitalWrite(valve0, HIGH);
         V0 = 1;
         isControling = 1;
         Ctrl_state = 1;
-        state = 1; // 浮上中
+        state = 1;  // 浮上中
         last_ctrl = millis();
       }
       break;
     case 1:
-      if((miliTime - last_ctrl) > SUP_STOP_TIME) {
+      if ((miliTime - last_ctrl) > SUP_STOP_TIME) {
         digitalWrite(valve0, LOW);
         V0 = 0;
         isControling = 1;
         Ctrl_state = 2;
-        state = 1; // 浮上中
+        state = 1;  // 浮上中
         last_ctrl = millis();
       }
       break;
     case 2:
-      if((miliTime - last_ctrl) > EXH_START_TIME) {
+      if ((miliTime - last_ctrl) > EXH_START_TIME) {
         digitalWrite(valve1, HIGH);
         V1 = 1;
         isControling = 1;
         Ctrl_state = 3;
-        state = 2; // 沈降中
+        state = 2;  // 沈降中
         last_ctrl = millis();
       }
       break;
     case 3:
-      if((miliTime - last_ctrl) > EXH_STOP_TIME) {
+      if ((miliTime - last_ctrl) > EXH_STOP_TIME) {
         digitalWrite(valve1, LOW);
         V1 = 0;
         isControling = 1;
-        Ctrl_state=0;
-        state = 2; // 沈降中
+        Ctrl_state = 0;
+        state = 2;  // 沈降中
         last_ctrl = millis();
       }
       break;
   }
-} 
+}
 
 // 電磁弁状況書き込み
 void writeSDcard_CTRL() {
