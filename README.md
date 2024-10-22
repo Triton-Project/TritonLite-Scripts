@@ -1,4 +1,4 @@
-# Triton2-Scripts
+# TritonLite-Scripts
 Triton-lite用プログラム
 
 ## 必要ライブラリ
